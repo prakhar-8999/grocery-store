@@ -1,8 +1,10 @@
 <script setup>
 import { ref } from "vue";
 import { RouterLink } from "vue-router";
+import apihit from "../axios";
 
 const state = ref({
+  name: undefined,
   email: undefined,
   password: undefined,
   confirmPassword: undefined,
@@ -10,6 +12,7 @@ const state = ref({
 
 const signUp = () => {
   const data = {
+    name: state.value.name,
     email: state.value.email,
     password: state.value.password,
     confirmPassword: state.value.confirmPassword,
@@ -23,6 +26,11 @@ const signUp = () => {
     });
     return;
   }
+  apihit
+    .post("register", data)
+    .then((res) => console.log(res))
+    .catch((err) => console.log(err));
+
   console.log(data);
 };
 </script>
@@ -87,6 +95,22 @@ const signUp = () => {
               <div class="grid gap-y-4">
                 <!-- Form Group -->
                 <div>
+                  <label for="name" class="block text-sm mb-2">Name</label>
+                  <div class="relative">
+                    <input
+                      type="text"
+                      id="name"
+                      name="name"
+                      placeholder="Name"
+                      v-model="state.name"
+                      class="py-3 px-4 block w-full border-gray-200 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-slate-200 dark:border-gray-700 dark:text-gray-400"
+                    />
+                  </div>
+                </div>
+                <!-- End Form Group -->
+
+                <!-- Form Group -->
+                <div>
                   <label for="email" class="block text-sm mb-2"
                     >Email address</label
                   >
@@ -100,10 +124,6 @@ const signUp = () => {
                       class="py-3 px-4 block w-full border-gray-200 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-slate-200 dark:border-gray-700 dark:text-gray-400"
                     />
                   </div>
-                  <p class="hidden text-xs text-red-600 mt-2" id="email-error">
-                    Please include a valid email address so we can get back to
-                    you
-                  </p>
                 </div>
                 <!-- End Form Group -->
 
