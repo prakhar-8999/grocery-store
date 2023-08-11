@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from "vue";
 import { RouterLink } from "vue-router";
-import apihit from "../axios";
+import request from "../request";
 
 const state = ref({
   name: undefined,
@@ -10,8 +10,8 @@ const state = ref({
   confirmPassword: undefined,
 });
 
-const signUp = () => {
-  const data = {
+const signUp = async () => {
+  const postData = {
     name: state.value.name,
     email: state.value.email,
     password: state.value.password,
@@ -26,12 +26,39 @@ const signUp = () => {
     });
     return;
   }
-  apihit
-    .post("register", data)
-    .then((res) => console.log(res))
-    .catch((err) => console.log(err));
 
-  console.log(data);
+  const { data, status } = await request("POST", "/register", {}, postData);
+  if (status === 200) {
+    Swal.fire({
+      position: "top-end",
+      icon: "success",
+      title: data.msg,
+      showConfirmButton: false,
+      timer: 1000,
+    });
+  }
+
+  // apihit
+  //   .post("register", postData)
+  //   .then((res) => {
+  //     if (res.status === 200)
+  //       Swal.fire({
+  //         position: "top-end",
+  //         icon: "success",
+  //         title: res.data.msg,
+  //         showConfirmButton: false,
+  //         timer: 1000,
+  //       });
+  //   })
+  //   .catch((err) => {
+  //     console.log(err);
+  //     if (err.response.status === 409)
+  //       Swal.fire({
+  //         icon: "error",
+  //         title: "Oops...",
+  //         text: err.response.data.msg,
+  //       });
+  //   });
 };
 </script>
 

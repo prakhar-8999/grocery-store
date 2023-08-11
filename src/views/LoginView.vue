@@ -1,19 +1,32 @@
 <script setup>
 import { ref } from "vue";
 import { RouterLink } from "vue-router";
+import request from "../request";
+import router from "../router";
 
 const state = ref({
   email: undefined,
   password: undefined,
 });
 
-const Login = (e) => {
+const Login = async (e) => {
   e.preventDefault();
-  const data = {
+  const postData = {
     email: state.value.email,
     password: state.value.password,
   };
-  console.log(data);
+  console.log(postData);
+  const { data, status } = await request("POST", "/login", {}, postData);
+  if (status === 200) {
+    Swal.fire({
+      position: "top-end",
+      icon: "success",
+      title: data.msg,
+      showConfirmButton: false,
+      timer: 1000,
+    });
+    router.push({ path: "dashboard" });
+  }
 };
 </script>
 
