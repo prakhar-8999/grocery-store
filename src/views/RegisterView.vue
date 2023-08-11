@@ -37,28 +37,6 @@ const signUp = async () => {
       timer: 1000,
     });
   }
-
-  // apihit
-  //   .post("register", postData)
-  //   .then((res) => {
-  //     if (res.status === 200)
-  //       Swal.fire({
-  //         position: "top-end",
-  //         icon: "success",
-  //         title: res.data.msg,
-  //         showConfirmButton: false,
-  //         timer: 1000,
-  //       });
-  //   })
-  //   .catch((err) => {
-  //     console.log(err);
-  //     if (err.response.status === 409)
-  //       Swal.fire({
-  //         icon: "error",
-  //         title: "Oops...",
-  //         text: err.response.data.msg,
-  //       });
-  //   });
 };
 </script>
 
