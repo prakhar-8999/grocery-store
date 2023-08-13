@@ -2,6 +2,8 @@
 import CartView from "../components/CartView.vue";
 import { ref, toRaw, reactive } from "vue";
 import request from "../request";
+import router from "../router";
+
 import {
   TransitionRoot,
   TransitionChild,
@@ -211,6 +213,20 @@ const editProduct = async (event) => {
     getProducts(selectedCategory.value);
   }
 };
+
+const logout = async () => {
+  const { data, status } = await request("GET", "/logout");
+  if (status === 200) {
+    Swal.fire({
+      position: "top-end",
+      icon: "success",
+      title: data.msg,
+      showConfirmButton: false,
+      timer: 1000,
+    });
+    router.push({ path: "login" });
+  }
+};
 </script>
 
 <template>
@@ -267,6 +283,7 @@ const editProduct = async (event) => {
           >
         </nav>
         <button
+          @click="logout"
           class="inline-flex items-center bg-blue-400 border-0 py-1 px-3 focus:outline-none hover:bg-blue-500 rounded text-base mt-4 md:mt-0"
         >
           Logout
@@ -745,6 +762,7 @@ const editProduct = async (event) => {
           >
         </nav>
         <button
+          @click="logout"
           class="inline-flex items-center bg-blue-400 border-0 py-1 px-3 focus:outline-none hover:bg-blue-500 rounded text-base mt-4 md:mt-0"
         >
           Logout
