@@ -3,6 +3,7 @@ import CartView from "../components/CartView.vue";
 import { ref, toRaw, reactive } from "vue";
 import request from "../request";
 import router from "../router";
+import { baseurl } from "../axios";
 
 import {
   TransitionRoot,
@@ -227,6 +228,10 @@ const logout = async () => {
     router.push({ path: "login" });
   }
 };
+
+const generateReport = () => {
+  window.open(`${baseurl}/orderReport`);
+};
 </script>
 
 <template>
@@ -280,6 +285,12 @@ const logout = async () => {
             class="mr-5 hover:text-gray-900 cursor-pointer"
             @click="changeJob(2)"
             >Approval Roles</span
+          >
+          <span
+            v-if="render === '3'"
+            class="mr-5 hover:text-gray-900 cursor-pointer"
+            @click="generateReport"
+            >Generate Report</span
           >
         </nav>
         <button
