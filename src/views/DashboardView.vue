@@ -1,4 +1,5 @@
 <script setup>
+import CartView from "../components/CartView.vue";
 import { ref, toRaw, reactive } from "vue";
 import request from "../request";
 import {
@@ -8,6 +9,8 @@ import {
   DialogPanel,
   DialogTitle,
 } from "@headlessui/vue";
+import ShopView from "../components/ShopView.vue";
+import ApprovalView from "../components/ApprovalView.vue";
 
 const isOpen = ref(false);
 const isProductModalOpen = ref(false);
@@ -208,17 +211,6 @@ const editProduct = async (event) => {
     getProducts(selectedCategory.value);
   }
 };
-
-const allProductsCategoryWise = ref([]);
-const getAllProductsCategoryWise = async () => {
-  if (localStorage.getItem("role") === "0") {
-    const { data, status } = await request("GET", "/userDashboard");
-    if (status === 200) {
-      allProductsCategoryWise.value = data;
-    }
-  }
-};
-getAllProductsCategoryWise();
 </script>
 
 <template>
@@ -230,7 +222,7 @@ getAllProductsCategoryWise();
   </div>
 
   <!-- Admin View -->
-  <div v-if="render === '3'">
+  <div v-if="render === '3' || render === '2'">
     <header class="text-gray-600 body-font bg-gray-100">
       <div
         class="container mx-auto flex flex-wrap p-5 flex-col md:flex-row items-center"
@@ -267,6 +259,12 @@ getAllProductsCategoryWise();
             @click="changeJob(1)"
             >Add Product</span
           >
+          <span
+            v-if="render === '3'"
+            class="mr-5 hover:text-gray-900 cursor-pointer"
+            @click="changeJob(2)"
+            >Approval Roles</span
+          >
         </nav>
         <button
           class="inline-flex items-center bg-blue-400 border-0 py-1 px-3 focus:outline-none hover:bg-blue-500 rounded text-base mt-4 md:mt-0"
@@ -293,15 +291,15 @@ getAllProductsCategoryWise();
           class="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 gap-x-5 gap-y-4"
         >
           <div v-for="cat in allCategories">
-            <div class="flex flex-col bg-white border shadow-sm rounded-xl">
-              <div class="!w-64 !h-64">
-                <img
-                  class="rounded-t-xl"
-                  style="width: 10cm"
-                  :src="cat.url"
-                  alt="Image Description"
-                />
-              </div>
+            <div
+              class="flex flex-col flex-[1_0_0%] bg-white border shadow-sm rounded-xl"
+            >
+              <img
+                class="rounded-t-xl"
+                style="width: 100%; height: 8cm"
+                :src="cat.url"
+                alt="Image Description"
+              />
 
               <div class="p-4 md:p-5">
                 <h3 class="text-lg font-bold text-gray-800">{{ cat.name }}</h3>
@@ -318,7 +316,7 @@ getAllProductsCategoryWise();
           </div>
           <div
             class="flex flex-col bg-white border shadow-sm rounded-xl cursor-pointer"
-            style="height: 395px"
+            style="height: 440px"
             @click="openModal"
           >
             <div class="flex h-full items-center justify-center">
@@ -470,15 +468,15 @@ getAllProductsCategoryWise();
           class="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 gap-x-5 gap-y-4"
         >
           <div v-for="p in products">
-            <div class="flex flex-col bg-white border shadow-sm rounded-xl">
-              <div class="!w-64 !h-64">
-                <img
-                  class="rounded-t-xl"
-                  style="width: 10cm"
-                  :src="p.url"
-                  alt="Image Description"
-                />
-              </div>
+            <div
+              class="flex flex-col flex-[1_0_0%] bg-white border shadow-sm rounded-xl"
+            >
+              <img
+                class="rounded-t-xl"
+                style="width: 100%; height: 8cm"
+                :src="p.url"
+                alt="Image Description"
+              />
               <div class="p-4 md:p-5">
                 <div class="flex justify-between">
                   <h3 class="text-lg font-bold text-gray-800">{{ p.name }}</h3>
@@ -487,7 +485,7 @@ getAllProductsCategoryWise();
                   </h3>
                 </div>
                 <!-- <h3 class="text-lg font-bold text-gray-800">{{ p.name }}</h3> -->
-                <p class="mt-1 text-gray-800 dark:text-gray-400">
+                <p class="mt-5 text-gray-800 dark:text-gray-400">
                   {{ p.description }}
                 </p>
 
@@ -503,7 +501,7 @@ getAllProductsCategoryWise();
           </div>
           <div
             class="flex flex-col bg-white border shadow-sm rounded-xl cursor-pointer"
-            style="height: 360px"
+            style="height: 480px"
             @click="() => openModal('product')"
           >
             <div class="flex h-full items-center justify-center">
@@ -579,7 +577,7 @@ getAllProductsCategoryWise();
                       <div class="grid mt-8">
                         <div>
                           <label for="name" class="block text-sm mb-2"
-                            >Category Name</label
+                            >Product Name</label
                           >
                           <div class="relative">
                             <input
@@ -700,10 +698,14 @@ getAllProductsCategoryWise();
         </TransitionRoot>
         <!-- add category modal -->
       </div>
+      <div v-if="job === 2">
+        <ApprovalView />
+      </div>
     </div>
   </div>
   <!-- Admin View -->
 
+  <!-- user View -->
   <div v-if="render === '0'">
     <header class="text-gray-600 body-font bg-gray-100">
       <div
@@ -764,71 +766,18 @@ getAllProductsCategoryWise();
     <div class="container px-6 mx-auto">
       <!-- Shop -->
       <div v-if="job === 0">
-        <p class="my-8 text-3xl font-semibold">
-          Category wise list of products
-        </p>
-        <div class="my-8">
-          <input
-            type="text"
-            id="search"
-            name="search"
-            placeholder="Enter product to search..."
-            class="py-3 px-4 block w-full border-gray-200 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-slate-200 dark:border-gray-700 dark:text-gray-400"
-            required
-            aria-describedby="email-error"
-          />
-        </div>
-        <div v-for="item in allProductsCategoryWise">
-          <p class="my-8 text-3xl font-semibold">
-            {{ item.category }}
-          </p>
-
-          <div class="grid grid-cols-1 sm:grid-cols-4 gap-x-6 gap-y-4">
-            <div v-for="p in item.product">
-              <div class="flex flex-col bg-white border shadow-sm rounded-xl">
-                <div class="!w-64 !h-64">
-                  <img
-                    class="rounded-t-xl"
-                    style="width: 10cm"
-                    :src="p.url"
-                    alt="Image Description"
-                  />
-                </div>
-                <div class="p-4 md:p-5">
-                  <div class="flex justify-between">
-                    <h3 class="text-lg font-bold text-gray-800">
-                      {{ p.name }}
-                    </h3>
-                    <h3 class="text-lg font-bold text-gray-800">
-                      price : {{ p.price }}
-                    </h3>
-                  </div>
-                  <!-- <h3 class="text-lg font-bold text-gray-800">{{ p.name }}</h3> -->
-                  <p class="mt-1 text-gray-800 dark:text-gray-400">
-                    {{ p.description }}
-                  </p>
-
-                  <button
-                    type="button"
-                    class="w-full text-white mt-5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2"
-                  >
-                    Buy Now
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <hr class="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700" />
-        </div>
+        <ShopView />
       </div>
       <!-- Shop -->
 
       <!-- Your Cart -->
-      <div v-if="job === 1">lmakdnkasnd</div>
+      <div v-if="job === 1">
+        <CartView />
+      </div>
       <!-- Your Cart -->
     </div>
   </div>
+  <!-- User View -->
 </template>
 
 <style>

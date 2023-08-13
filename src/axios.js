@@ -10,6 +10,7 @@ const apihit = axios.create({
 apihit.interceptors.response.use(
     (response) => response,
     (error) => {
+        console.log(error)
         const { status, data } = error.response
         if (status === 409) {
             Swal.fire({
