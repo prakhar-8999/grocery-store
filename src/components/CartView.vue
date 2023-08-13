@@ -11,6 +11,7 @@ import {
 
 const isOpen = ref(false);
 const loading = ref(true);
+const loadingBtn = ref(false);
 const total = ref(0);
 const searchColoumn = ref("name");
 const searchValue = ref("");
@@ -76,6 +77,7 @@ const deleteFromCart = async (id) => {
 };
 
 const placeOrder = async () => {
+  loadingBtn.value = true;
   const { data, status } = await request(
     "POST",
     "/placeOrder",
@@ -93,6 +95,7 @@ const placeOrder = async () => {
     isOpen.value = false;
     getCartProducts();
   }
+  loadingBtn.value = false;
 };
 
 const performSearch = (value) => {
@@ -205,6 +208,11 @@ const performSearch = (value) => {
         Buy All
       </button>
     </div>
+    <div v-if="searchArray.length === 0">
+      <p class="text-center text-xl font-semibold text-gray-500 mt-8">
+        No Product found in your cart
+      </p>
+    </div>
 
     <div>
       <TransitionRoot appear :show="isOpen" as="template">
@@ -269,7 +277,9 @@ const performSearch = (value) => {
                   </div>
 
                   <div class="mt-8">
+                    <div class="spinner" v-if="loadingBtn"></div>
                     <button
+                      v-if="!loadingBtn"
                       type="button"
                       class="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
                       @click="placeOrder"
