@@ -320,6 +320,14 @@ const logout = async () => {
 
               <div class="p-4 md:p-5">
                 <h3 class="text-lg font-bold text-gray-800">{{ cat.name }}</h3>
+                <div class="mt-5">
+                  <p v-if="cat.status === 'pending'" class="font-semibold">
+                    STATUS : <span style="color: yellow">PENDING</span>
+                  </p>
+                  <p v-if="cat.status === 'insert'" class="font-semibold">
+                    STATUS : <span style="color: green">APPROVED</span>
+                  </p>
+                </div>
 
                 <button
                   type="button"
@@ -333,7 +341,7 @@ const logout = async () => {
           </div>
           <div
             class="flex flex-col bg-white border shadow-sm rounded-xl cursor-pointer"
-            style="height: 440px"
+            style="height: 485px"
             @click="openModal"
           >
             <div class="flex h-full items-center justify-center">
@@ -490,7 +498,7 @@ const logout = async () => {
             >
               <img
                 class="rounded-t-xl"
-                style="width: 100%; height: 8cm"
+                style="width: 100%; height: 7cm"
                 :src="p.url"
                 alt="Image Description"
               />
@@ -505,6 +513,14 @@ const logout = async () => {
                 <p class="mt-5 text-gray-800 dark:text-gray-400">
                   {{ p.description }}
                 </p>
+                <div class="mt-5">
+                  <p v-if="p.status === 'pending'" class="font-semibold">
+                    STATUS : <span style="color: yellow">PENDING</span>
+                  </p>
+                  <p v-if="p.status === 'insert'" class="font-semibold">
+                    STATUS : <span style="color: green">APPROVED</span>
+                  </p>
+                </div>
 
                 <button
                   type="button"
@@ -518,7 +534,7 @@ const logout = async () => {
           </div>
           <div
             class="flex flex-col bg-white border shadow-sm rounded-xl cursor-pointer"
-            style="height: 480px"
+            style="height: 490px"
             @click="() => openModal('product')"
           >
             <div class="flex h-full items-center justify-center">
