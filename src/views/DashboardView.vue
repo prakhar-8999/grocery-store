@@ -1,6 +1,6 @@
 <script setup>
 import CartView from "../components/CartView.vue";
-import { ref, toRaw, reactive } from "vue";
+import { ref, reactive } from "vue";
 import request from "../request";
 import router from "../router";
 import { baseurl } from "../axios";
@@ -20,13 +20,7 @@ const isProductModalOpen = ref(false);
 const isEdit = ref({ status: false, id: 0 });
 const render = ref("loading");
 const job = ref(0);
-const allCategories = ref([
-  // {
-  //   id: 0,
-  //   name: "Mobile phones",
-  //   url: "https://images-cdn.ubuy.co.in/633b5984f8af8c7e5a371e0b-na-i13-pro-max-cell-phones-6-3-inch-hd.jpg",
-  // },
-]);
+const allCategories = ref([]);
 const catName = ref("");
 const catUrl = ref("");
 const singleProduct = reactive({
