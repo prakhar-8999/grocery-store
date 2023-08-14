@@ -1,7 +1,7 @@
 import axios from "axios";
 
 // const baseurl = 'https://10.21.82.114:5000/'
-export const baseurl = 'https://463d-103-77-186-10.ngrok-free.app/'
+export const baseurl = 'https://a988-103-77-186-10.ngrok-free.app/'
 const apihit = axios.create({
     baseURL: baseurl,
     withCredentials: true,

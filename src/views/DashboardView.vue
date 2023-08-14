@@ -226,6 +226,44 @@ const logout = async () => {
 const generateReport = () => {
   window.open(`${baseurl}/orderReport`);
 };
+
+const deleteCategory = async (id) => {
+  console.log(id);
+  const { data, status } = await request(
+    "DELETE",
+    "/approveCategory",
+    {},
+    { catId: id }
+  );
+  if (status === 200) {
+    Swal.fire({
+      position: "center",
+      icon: "success",
+      title: data.msg,
+    });
+    getCategories();
+  }
+};
+
+const deleteProduct = async (id) => {
+  console.log(id);
+  const { data, status } = await request(
+    "DELETE",
+    "/approveProduct",
+    {},
+    { prodId: id }
+  );
+  if (status === 200) {
+    Swal.fire({
+      position: "top-end",
+      icon: "success",
+      title: data.msg,
+      showConfirmButton: false,
+      timer: 1500,
+    });
+    getProducts(selectedCategory.value);
+  }
+};
 </script>
 
 <template>
@@ -316,12 +354,31 @@ const generateReport = () => {
             <div
               class="flex flex-col flex-[1_0_0%] bg-white border shadow-sm rounded-xl"
             >
-              <img
-                class="rounded-t-xl"
-                style="width: 100%; height: 8cm"
-                :src="cat.url"
-                alt="Image Description"
-              />
+              <div class="relative">
+                <img
+                  class="rounded-t-xl"
+                  style="width: 100%; height: 8cm"
+                  :src="cat.url"
+                  alt="Image Description"
+                />
+                <button
+                  @click="() => deleteCategory(cat.id)"
+                  class="absolute top-2 right-3 bg-gray-200 text-white p-2 rounded-full hover:bg-gray-400"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    style="fill: rgba(0, 0, 0, 1); transform: ; msfilter: "
+                  >
+                    <path
+                      d="M5 20a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8h2V6h-4V4a2 2 0 0 0-2-2H9a2 2 0 0 0-2 2v2H3v2h2zM9 4h6v2H9zM8 8h9v12H7V8z"
+                    ></path>
+                    <path d="M9 10h2v8H9zm4 0h2v8h-2z"></path>
+                  </svg>
+                </button>
+              </div>
 
               <div class="p-4 md:p-5">
                 <h3 class="text-lg font-bold text-gray-800">{{ cat.name }}</h3>
@@ -501,12 +558,31 @@ const generateReport = () => {
             <div
               class="flex flex-col flex-[1_0_0%] bg-white border shadow-sm rounded-xl"
             >
-              <img
-                class="rounded-t-xl"
-                style="width: 100%; height: 7cm"
-                :src="p.url"
-                alt="Image Description"
-              />
+              <div class="relative">
+                <img
+                  class="rounded-t-xl"
+                  style="width: 100%; height: 7cm"
+                  :src="p.url"
+                  alt="Image Description"
+                />
+                <button
+                  @click="() => deleteProduct(p.id)"
+                  class="absolute top-2 right-3 bg-gray-200 text-white p-2 rounded-full hover:bg-gray-400"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    style="fill: rgba(0, 0, 0, 1); transform: ; msfilter: "
+                  >
+                    <path
+                      d="M5 20a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8h2V6h-4V4a2 2 0 0 0-2-2H9a2 2 0 0 0-2 2v2H3v2h2zM9 4h6v2H9zM8 8h9v12H7V8z"
+                    ></path>
+                    <path d="M9 10h2v8H9zm4 0h2v8h-2z"></path>
+                  </svg>
+                </button>
+              </div>
               <div class="p-4 md:p-5">
                 <div class="flex justify-between">
                   <h3 class="text-lg font-bold text-gray-800">{{ p.name }}</h3>
